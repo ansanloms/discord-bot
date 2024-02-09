@@ -7,6 +7,7 @@ import {
 } from "https://deno.land/x/discordeno@18.0.1/mod.ts";
 
 import * as minecraft from "./bot/minecraft/mod.ts";
+import * as minecraftCompute from "./bot/minecraft/compute.ts";
 
 export const bot = createBot({
   token: Deno.env.get("DISCORD_TOKEN")!,
@@ -31,3 +32,43 @@ bot.events.interactionCreate = async (b, interaction) => {
 };
 
 await startBot(bot);
+
+Deno.cron("Stop Minecraft server", "0 4,10,16 * * *", async () => {
+  try {
+    const { status } = await minecraftCompute.get();
+
+    if (status === "RUNNING") {
+      await bot.helpers.sendMessage(
+        Deno.env.get("DISCORD_CHANNEL_ID_MINECRAFT")!,
+        {
+          content:
+            "Minecraft サーバが起動中です。1 分後にシャットダウンします。",
+        },
+      );
+
+      await setTimeout(async () => {
+        await minecraftCompute.stop();
+        const { status } = await minecraftCompute.get();
+
+        if (status === "RUNNING") {
+          await bot.helpers.sendMessage(
+            Deno.env.get("DISCORD_CHANNEL_ID_MINECRAFT")!,
+            {
+              content:
+                "Minecraft サーバのシャットダウンに失敗している可能性があります。確認してください。",
+            },
+          );
+        } else {
+          await bot.helpers.sendMessage(
+            Deno.env.get("DISCORD_CHANNEL_ID_MINECRAFT")!,
+            {
+              content: "Minecraft サーバをシャットダウンしました。",
+            },
+          );
+        }
+      }, 1000 * 60);
+    }
+  } catch (err) {
+    console.error(err);
+  }
+});
