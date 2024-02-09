@@ -1,0 +1,16 @@
+{
+  "lint": {
+  },
+  "fmt": {
+    "proseWrap": "preserve"
+  },
+  "imports": {
+    "std/": "https://deno.land/std@0.215.0/",
+    "discordeno/": "https://deno.land/x/discordeno@18.0.1/",
+    "@google-cloud/compute": "npm:@google-cloud/compute@4.1.0"
+  },
+  "tasks": {
+    "dev": "deno run -A --watch ./main.ts",
+    "start": "deno run -A ./main.ts"
+  }
+}
