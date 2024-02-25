@@ -33,42 +33,42 @@ bot.events.interactionCreate = async (b, interaction) => {
 
 await startBot(bot);
 
-Deno.cron("Stop Minecraft server", "0 4,10,16 * * *", async () => {
-  try {
-    const { status } = await minecraftCompute.get();
-
-    if (status === "RUNNING") {
-      await bot.helpers.sendMessage(
-        Deno.env.get("DISCORD_CHANNEL_ID_MINECRAFT")!,
-        {
-          content:
-            "Minecraft サーバが起動中です。1 分後にシャットダウンします。",
-        },
-      );
-
-      await setTimeout(async () => {
-        await minecraftCompute.stop();
-        const { status } = await minecraftCompute.get();
-
-        if (status === "RUNNING") {
-          await bot.helpers.sendMessage(
-            Deno.env.get("DISCORD_CHANNEL_ID_MINECRAFT")!,
-            {
-              content:
-                "Minecraft サーバのシャットダウンに失敗している可能性があります。確認してください。",
-            },
-          );
-        } else {
-          await bot.helpers.sendMessage(
-            Deno.env.get("DISCORD_CHANNEL_ID_MINECRAFT")!,
-            {
-              content: "Minecraft サーバをシャットダウンしました。",
-            },
-          );
-        }
-      }, 1000 * 60);
-    }
-  } catch (err) {
-    console.error(err);
-  }
-});
+//Deno.cron("Stop Minecraft server", "0 4,10,16 * * *", async () => {
+//  try {
+//    const { status } = await minecraftCompute.get();
+//
+//    if (status === "RUNNING") {
+//      await bot.helpers.sendMessage(
+//        Deno.env.get("DISCORD_CHANNEL_ID_MINECRAFT")!,
+//        {
+//          content:
+//            "Minecraft サーバが起動中です。1 分後にシャットダウンします。",
+//        },
+//      );
+//
+//      await setTimeout(async () => {
+//        await minecraftCompute.stop();
+//        const { status } = await minecraftCompute.get();
+//
+//        if (status === "RUNNING") {
+//          await bot.helpers.sendMessage(
+//            Deno.env.get("DISCORD_CHANNEL_ID_MINECRAFT")!,
+//            {
+//              content:
+//                "Minecraft サーバのシャットダウンに失敗している可能性があります。確認してください。",
+//            },
+//          );
+//        } else {
+//          await bot.helpers.sendMessage(
+//            Deno.env.get("DISCORD_CHANNEL_ID_MINECRAFT")!,
+//            {
+//              content: "Minecraft サーバをシャットダウンしました。",
+//            },
+//          );
+//        }
+//      }, 1000 * 60);
+//    }
+//  } catch (err) {
+//    console.error(err);
+//  }
+//});

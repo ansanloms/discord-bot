@@ -2,20 +2,20 @@
   "version": "3",
   "packages": {
     "specifiers": {
-      "npm:@google-cloud/compute@4.1.0": "npm:@google-cloud/compute@4.1.0"
+      "npm:@google-cloud/compute@4.2.0": "npm:@google-cloud/compute@4.2.0"
     },
     "npm": {
-      "@google-cloud/compute@4.1.0": {
-        "integrity": "sha512-9vzsfRK2t5wLJMg3+r+LbgFqrowpqB05wBkWDtmBRnwOEvdAK8tB2nLm8U4Wojh9VzR8T2p6QaAaXVYfs6dOfA==",
+      "@google-cloud/compute@4.2.0": {
+        "integrity": "sha512-mWdk3IQ6FzapS5oQNd9pFYIiZPflp3dsyEq+sVH4VUR6KT9ethLaIgt5EpoxgvsGfLhpKKtdeBe80P2jLwQpuQ==",
         "dependencies": {
-          "google-gax": "google-gax@4.3.0"
+          "google-gax": "google-gax@4.3.1"
         }
       },
-      "@grpc/grpc-js@1.9.14": {
-        "integrity": "sha512-nOpuzZ2G3IuMFN+UPPpKrC6NsLmWsTqSsm66IRfnBt1D4pwTqE27lmbpcPM+l2Ua4gE7PfjRHI6uedAy7hoXUw==",
+      "@grpc/grpc-js@1.10.1": {
+        "integrity": "sha512-55ONqFytZExfOIjF1RjXPcVmT/jJqFzbbDqxK9jmRV4nxiYWtL9hENSW1Jfx0SdZfrvoqd44YJ/GJTqfRrawSQ==",
         "dependencies": {
           "@grpc/proto-loader": "@grpc/proto-loader@0.7.10",
-          "@types/node": "@types/node@20.11.17"
+          "@types/node": "@types/node@20.11.20"
         }
       },
       "@grpc/proto-loader@0.7.10": {
@@ -86,8 +86,8 @@
         "integrity": "sha512-IXl7o+R9iti9eBW4Wg2hx1xQDig183jj7YLn8F7udNceyfkbn1ZxmzZXuak20gR40D7pIkIY1kYGx5VIGbaHKA==",
         "dependencies": {}
       },
-      "@types/node@20.11.17": {
-        "integrity": "sha512-QmgQZGWu1Yw9TDyAP9ZzpFJKynYNeOvwMJmaxABfieQoVoiVOS6MN1WSpqpRcbeA5+RW82kraAVxCCJg+780Qw==",
+      "@types/node@20.11.20": {
+        "integrity": "sha512-7/rR21OS+fq8IyHTgtLkDK949uzsa6n8BkziAKtPVpugIkO6D+/ooXMvzXxDnZrmtXVfjb1bKQafYpb8s89LOg==",
         "dependencies": {
           "undici-types": "undici-types@5.26.5"
         }
@@ -228,11 +228,11 @@
           "mime-types": "mime-types@2.1.35"
         }
       },
-      "gaxios@6.2.0": {
-        "integrity": "sha512-H6+bHeoEAU5D6XNc6mPKeN5dLZqEDs9Gpk6I+SZBEzK5So58JVrHPmevNi35fRl1J9Y5TaeLW0kYx3pCJ1U2mQ==",
+      "gaxios@6.3.0": {
+        "integrity": "sha512-p+ggrQw3fBwH2F5N/PAI4k/G/y1art5OxKpb2J2chwNNHM4hHuAOtivjPuirMF4KNKwTTUal/lPfL2+7h2mEcg==",
         "dependencies": {
           "extend": "extend@3.0.2",
-          "https-proxy-agent": "https-proxy-agent@7.0.2",
+          "https-proxy-agent": "https-proxy-agent@7.0.4",
           "is-stream": "is-stream@2.0.1",
           "node-fetch": "node-fetch@2.7.0"
         }
@@ -240,7 +240,7 @@
       "gcp-metadata@6.1.0": {
         "integrity": "sha512-Jh/AIwwgaxan+7ZUUmRLCjtchyDiqh4KjBJ5tW3plBZb5iL/BPcso8A5DlzeD9qlw0duCamnNdpFjxwaT0KyKg==",
         "dependencies": {
-          "gaxios": "gaxios@6.2.0",
+          "gaxios": "gaxios@6.3.0",
           "json-bigint": "json-bigint@1.0.0"
         }
       },
@@ -253,16 +253,16 @@
         "dependencies": {
           "base64-js": "base64-js@1.5.1",
           "ecdsa-sig-formatter": "ecdsa-sig-formatter@1.0.11",
-          "gaxios": "gaxios@6.2.0",
+          "gaxios": "gaxios@6.3.0",
           "gcp-metadata": "gcp-metadata@6.1.0",
           "gtoken": "gtoken@7.1.0",
           "jws": "jws@4.0.0"
         }
       },
-      "google-gax@4.3.0": {
-        "integrity": "sha512-SWHX72gbccNfpPoeTkNmZJxmLyKWeLr0+5Ch6qtrf4oAN8KFXnyXe5EixatILnJWufM3L59MRZ4hSJWVJ3IQqw==",
+      "google-gax@4.3.1": {
+        "integrity": "sha512-qpSfslpwqToIgQ+Tf3MjWIDjYK4UFIZ0uz6nLtttlW9N1NQA4PhGf9tlGo6KDYJ4rgL2w4CjXVd0z5yeNpN/Iw==",
         "dependencies": {
-          "@grpc/grpc-js": "@grpc/grpc-js@1.9.14",
+          "@grpc/grpc-js": "@grpc/grpc-js@1.10.1",
           "@grpc/proto-loader": "@grpc/proto-loader@0.7.10",
           "@types/long": "@types/long@4.0.2",
           "abort-controller": "abort-controller@3.0.0",
@@ -279,7 +279,7 @@
       "gtoken@7.1.0": {
         "integrity": "sha512-pCcEwRi+TKpMlxAQObHDQ56KawURgyAf6jtIY046fJ5tIv3zDe/LEIubckAO8fj6JnAxLdmWkUfNyulQ2iKdEw==",
         "dependencies": {
-          "gaxios": "gaxios@6.2.0",
+          "gaxios": "gaxios@6.3.0",
           "jws": "jws@4.0.0"
         }
       },
@@ -298,8 +298,8 @@
           "debug": "debug@4.3.4"
         }
       },
-      "https-proxy-agent@7.0.2": {
-        "integrity": "sha512-NmLNjm6ucYwtcUmL7JQC1ZQ57LmHP4lT15FQ8D61nak1rO6DH+fz5qNK2Ap5UN4ZapYICE3/0KodcLYSPsPbaA==",
+      "https-proxy-agent@7.0.4": {
+        "integrity": "sha512-wlwpilI7YdjSkWaQ/7omYBMTliDcmCN8OLihO6I9B86g06lMyAoqgoDpV0XqoaPOKj+0DIdAvnsWfyAAhmimcg==",
         "dependencies": {
           "agent-base": "agent-base@7.1.0",
           "debug": "debug@4.3.4"
@@ -395,7 +395,7 @@
           "@protobufjs/path": "@protobufjs/path@1.1.2",
           "@protobufjs/pool": "@protobufjs/pool@1.1.0",
           "@protobufjs/utf8": "@protobufjs/utf8@1.1.0",
-          "@types/node": "@types/node@20.11.17",
+          "@types/node": "@types/node@20.11.20",
           "long": "long@5.2.3"
         }
       },
@@ -529,10 +529,10 @@
     }
   },
   "remote": {
-    "https://deno.land/std@0.215.0/dotenv/load.ts": "587b342f0f6a3df071331fe6ba1c823729ab68f7d53805809475e486dd4161d7",
-    "https://deno.land/std@0.215.0/dotenv/mod.ts": "0180eaeedaaf88647318811cdaa418cc64dc51fb08354f91f5f480d0a1309f7d",
-    "https://deno.land/std@0.215.0/dotenv/parse.ts": "a49ed243bd62ec26f38614042cda4e5e3a47b18337c93b0f9f8556a5c918884b",
-    "https://deno.land/std@0.215.0/dotenv/stringify.ts": "0047ad7068289735d08964046aea267a750c141b494ca0e38831b89be6c020c2",
+    "https://deno.land/std@0.217.0/dotenv/load.ts": "587b342f0f6a3df071331fe6ba1c823729ab68f7d53805809475e486dd4161d7",
+    "https://deno.land/std@0.217.0/dotenv/mod.ts": "0180eaeedaaf88647318811cdaa418cc64dc51fb08354f91f5f480d0a1309f7d",
+    "https://deno.land/std@0.217.0/dotenv/parse.ts": "a49ed243bd62ec26f38614042cda4e5e3a47b18337c93b0f9f8556a5c918884b",
+    "https://deno.land/std@0.217.0/dotenv/stringify.ts": "0047ad7068289735d08964046aea267a750c141b494ca0e38831b89be6c020c2",
     "https://deno.land/x/discordeno@18.0.1/bot.ts": "b6c4f1c966f1a968186921619b6e5ebfec7c5eb0dc2e49a66d2c86b37cb2acc7",
     "https://deno.land/x/discordeno@18.0.1/gateway/manager/calculateTotalShards.ts": "2d2ebe860861d58524416446426d78e5b881c17b3a565ea4822c67f5534214bc",
     "https://deno.land/x/discordeno@18.0.1/gateway/manager/calculateWorkerId.ts": "44c46f2977104a5f92cc21cf31d6b2bc5dcfcefba23495cd619dbdf074a00af1",
@@ -927,7 +927,7 @@
   },
   "workspace": {
     "dependencies": [
-      "npm:@google-cloud/compute@4.1.0"
+      "npm:@google-cloud/compute@4.2.0"
     ]
   }
 }

@@ -4,228 +4,88 @@ import {
   InteractionResponseTypes,
 } from "discordeno/mod.ts";
 import type { EventHandlers } from "discordeno/mod.ts";
-import * as compute from "./compute.ts";
+import * as server from "./server.ts";
+
+const ignoreAnsiCodeRegex =
+  /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
 
 export const command: CreateApplicationCommand = {
   name: "minecraft",
   description: "Minecraft server operation.",
   options: [
     {
-      name: "status",
-      description: "Minecraft server status.",
+      name: "command",
+      description: "Send commands to the Minecraft server.",
       type: ApplicationCommandOptionTypes.SubCommand,
+      options: [
+        {
+          name: "command",
+          description: "command.",
+          required: true,
+          type: ApplicationCommandOptionTypes.String,
+        },
+      ],
     },
     {
-      name: "start",
-      description: "Start Minecraft server.",
-      type: ApplicationCommandOptionTypes.SubCommand,
-    },
-    {
-      name: "stop",
-      description: "Stop Minecraft server.",
+      name: "backup",
+      description: "Creating a backup.",
       type: ApplicationCommandOptionTypes.SubCommand,
     },
   ],
-};
-
-const interactionStatus: EventHandlers["interactionCreate"] = async (
-  bot,
-  interaction,
-) => {
-  try {
-    const instance = await compute.get();
-
-    const name = instance.name || undefined;
-    const status = instance.status || undefined;
-    const ipAddresses =
-      ((instance.networkInterfaces || []).map((networkInterface) =>
-        (networkInterface.accessConfigs || []).map((accessConfig) =>
-          accessConfig.natIP || undefined
-        )
-      )).flat().filter((ip): ip is string => typeof ip === "string");
-
-    await bot.helpers.sendInteractionResponse(
-      interaction.id,
-      interaction.token,
-      {
-        type: InteractionResponseTypes.ChannelMessageWithSource,
-        data: {
-          content: `
-- name: \`${name || "???"}\`
-- status: \`${status || "???"}\`
-- ip address: ${ipAddresses.map((ipAddress) => `\`${ipAddress}\``) || `\`???\``}
-`,
-        },
-      },
-    );
-  } catch (err) {
-    console.error(err);
-
-    await bot.helpers.sendInteractionResponse(
-      interaction.id,
-      interaction.token,
-      {
-        type: InteractionResponseTypes.ChannelMessageWithSource,
-        data: {
-          content: `
-\`\`\`
-${err}
-\`\`\`
-`,
-        },
-      },
-    );
-  }
-};
-
-const interactionStart: EventHandlers["interactionCreate"] = async (
-  bot,
-  interaction,
-) => {
-  try {
-    await compute.start();
-
-    await bot.helpers.sendInteractionResponse(
-      interaction.id,
-      interaction.token,
-      {
-        type: InteractionResponseTypes.ChannelMessageWithSource,
-        data: {
-          content: `
-Instance started.
-Please wait a few minutes.
-`,
-        },
-      },
-    );
-  } catch (err) {
-    console.error(err);
-
-    await bot.helpers.sendInteractionResponse(
-      interaction.id,
-      interaction.token,
-      {
-        type: InteractionResponseTypes.ChannelMessageWithSource,
-        data: {
-          content: `
-\`\`\`
-${err}
-\`\`\`
-`,
-        },
-      },
-    );
-  }
-};
-
-const interactionStop: EventHandlers["interactionCreate"] = async (
-  bot,
-  interaction,
-) => {
-  try {
-    await compute.stop();
-
-    await bot.helpers.sendInteractionResponse(
-      interaction.id,
-      interaction.token,
-      {
-        type: InteractionResponseTypes.ChannelMessageWithSource,
-        data: {
-          content: `
-Instance stopped.
-Please wait a few minutes.
-`,
-        },
-      },
-    );
-  } catch (err) {
-    console.error(err);
-
-    await bot.helpers.sendInteractionResponse(
-      interaction.id,
-      interaction.token,
-      {
-        type: InteractionResponseTypes.ChannelMessageWithSource,
-        data: {
-          content: `
-\`\`\`
-${err}
-\`\`\`
-`,
-        },
-      },
-    );
-  }
 };
 
 const interactionCommand: EventHandlers["interactionCreate"] = async (
   bot,
   interaction,
 ) => {
-  const cmd =
+  const commands = [
     interaction.data?.options?.find((option) => option.name === "command")
       ?.options?.find((option) =>
         option.name === "command" && typeof option.value === "string"
-      )?.value || undefined;
+      )?.value || undefined,
+  ].filter((v): v is string => typeof v === "string");
 
-  if (typeof cmd !== "string") {
-    await bot.helpers.sendInteractionResponse(
-      interaction.id,
-      interaction.token,
-      {
-        type: InteractionResponseTypes.ChannelMessageWithSource,
-        data: {
-          content: "Invalid command.",
-        },
-      },
-    );
-    return;
+  if (commands.length <= 0) {
+    throw new TypeError("Invalid command.");
   }
 
-  try {
-    await bot.helpers.sendInteractionResponse(
-      interaction.id,
-      interaction.token,
-      {
-        type: InteractionResponseTypes.ChannelMessageWithSource,
-        data: {
-          content: "Sending...",
-        },
+  const { code, stdout, stderr } = await server.sendCommand(commands);
+
+  await bot.helpers.sendInteractionResponse(
+    interaction.id,
+    interaction.token,
+    {
+      type: InteractionResponseTypes.ChannelMessageWithSource,
+      data: {
+        content: `\`\`\`${
+          new TextDecoder().decode(code === 0 ? stdout : stderr).replace(
+            ignoreAnsiCodeRegex,
+            "",
+          ) || "(empty)"
+        }\`\`\``,
       },
-    );
+    },
+  );
+};
 
-    const { code, stdout, stderr } = await compute.command(cmd);
-
-    await bot.helpers.sendMessage(interaction.channelId!, {
-      content: `
-Request:
-\`\`\`
-${cmd}
-\`\`\`
-Response:
-\`\`\`
-${(code === 0 ? stdout : stderr) || "(empty)"}
-\`\`\`
-`,
-    });
-  } catch (err) {
-    console.error(err);
-
-    await bot.helpers.sendInteractionResponse(
-      interaction.id,
-      interaction.token,
-      {
-        type: InteractionResponseTypes.ChannelMessageWithSource,
-        data: {
-          content: `
-\`\`\`
-${err}
-\`\`\`
-`,
-        },
+const interactionBackup: EventHandlers["interactionCreate"] = async (
+  bot,
+  interaction,
+) => {
+  await bot.helpers.sendInteractionResponse(
+    interaction.id,
+    interaction.token,
+    {
+      type: InteractionResponseTypes.ChannelMessageWithSource,
+      data: {
+        content: `backup...`,
       },
-    );
-  }
+    },
+  );
+
+  await server.sendCommand(["say backup.", "save-all"]);
+  await server.execScript("backup");
+  await server.sendCommand(["say backup completed."]);
 };
 
 export const interactionCreate: EventHandlers["interactionCreate"] = async (
@@ -235,16 +95,30 @@ export const interactionCreate: EventHandlers["interactionCreate"] = async (
   if (interaction.data?.name !== command.name) {
     return;
   }
+  try {
+    if (interaction.data?.options?.at(0)?.name === "command") {
+      await interactionCommand(bot, interaction);
+    }
 
-  if (interaction.data?.options?.at(0)?.name === "status") {
-    await interactionStatus(bot, interaction);
-  }
+    if (interaction.data?.options?.at(0)?.name === "backup") {
+      await interactionBackup(bot, interaction);
+    }
+  } catch (err) {
+    console.error(err);
 
-  if (interaction.data?.options?.at(0)?.name === "start") {
-    await interactionStart(bot, interaction);
-  }
-
-  if (interaction.data?.options?.at(0)?.name === "stop") {
-    await interactionStop(bot, interaction);
+    await bot.helpers.sendInteractionResponse(
+      interaction.id,
+      interaction.token,
+      {
+        type: InteractionResponseTypes.ChannelMessageWithSource,
+        data: {
+          content: `
+\`\`\`
+${err}
+\`\`\`
+`,
+        },
+      },
+    );
   }
 };

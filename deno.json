@@ -5,9 +5,9 @@
     "proseWrap": "preserve"
   },
   "imports": {
-    "std/": "https://deno.land/std@0.215.0/",
+    "std/": "https://deno.land/std@0.217.0/",
     "discordeno/": "https://deno.land/x/discordeno@18.0.1/",
-    "@google-cloud/compute": "npm:@google-cloud/compute@4.1.0"
+    "@google-cloud/compute": "npm:@google-cloud/compute@4.2.0"
   },
   "tasks": {
     "dev": "deno run -A --unstable-cron --watch ./main.ts",
