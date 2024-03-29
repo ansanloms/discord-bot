@@ -4,10 +4,9 @@ import {
   createBot,
   Intents,
   startBot,
-} from "https://deno.land/x/discordeno@18.0.1/mod.ts";
+} from "discordeno/mod.ts";
 
 import * as minecraft from "./bot/minecraft/mod.ts";
-import * as minecraftCompute from "./bot/minecraft/compute.ts";
 
 export const bot = createBot({
   token: Deno.env.get("DISCORD_TOKEN")!,

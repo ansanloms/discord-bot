@@ -37,7 +37,7 @@ export const execScript = async (scriptName: string) => {
           "--project-directory",
           Deno.env.get("MINECRAFT_SERVER_PROJECT_DIRECTORY")!,
           "exec",
-          "minecraft",
+          "minecraft-vanilla",
           "bash",
           `./scripts/${scriptName}.sh`,
         ].join(" "),
