@@ -31,6 +31,29 @@ export const command: CreateApplicationCommand = {
       description: "Creating a backup.",
       type: ApplicationCommandOptionTypes.SubCommand,
     },
+    {
+      name: "bot",
+      description: "Start/Stop bot.",
+      type: ApplicationCommandOptionTypes.SubCommand,
+      options: [
+        {
+          name: "status",
+          description: "(start|stop).",
+          required: true,
+          type: ApplicationCommandOptionTypes.String,
+          choices: [
+            {
+              "name": "Start.",
+              "value": "start",
+            },
+            {
+              "name": "Stop.",
+              "value": "stop",
+            },
+          ],
+        },
+      ],
+    },
   ],
 };
 
@@ -72,20 +95,66 @@ const interactionBackup: EventHandlers["interactionCreate"] = async (
   bot,
   interaction,
 ) => {
-  await bot.helpers.sendInteractionResponse(
-    interaction.id,
-    interaction.token,
-    {
-      type: InteractionResponseTypes.ChannelMessageWithSource,
-      data: {
-        content: `backup...`,
+  await Promise.all([
+    bot.helpers.sendInteractionResponse(
+      interaction.id,
+      interaction.token,
+      {
+        type: InteractionResponseTypes.ChannelMessageWithSource,
+        data: {
+          content: "backup...",
+        },
       },
-    },
-  );
+    ),
+    (async () => {
+      await server.sendCommand(["say backup.", "save-all"]);
+      await server.execScript("backup");
+      await server.sendCommand(["say backup completed."]);
+    })(),
+  ]);
+};
 
-  await server.sendCommand(["say backup.", "save-all"]);
-  await server.execScript("backup");
-  await server.sendCommand(["say backup completed."]);
+const interactionBot: EventHandlers["interactionCreate"] = async (
+  bot,
+  interaction,
+) => {
+  const status =
+    interaction.data?.options?.find((option) => option.name === "bot")
+      ?.options?.find((option) =>
+        option.name === "status" && typeof option.value === "string"
+      )?.value || undefined;
+
+  if (status === "start") {
+    await Promise.all([
+      bot.helpers.sendInteractionResponse(
+        interaction.id,
+        interaction.token,
+        {
+          type: InteractionResponseTypes.ChannelMessageWithSource,
+          data: {
+            content: "starting bot...",
+          },
+        },
+      ),
+      server.startBot(),
+    ]);
+  }
+
+  if (status === "stop") {
+    await Promise.all([
+      bot.helpers.sendInteractionResponse(
+        interaction.id,
+        interaction.token,
+        {
+          type: InteractionResponseTypes.ChannelMessageWithSource,
+          data: {
+            content: "stopping bot...",
+          },
+        },
+      ),
+      server.stopBot(),
+    ]);
+  }
 };
 
 export const interactionCreate: EventHandlers["interactionCreate"] = async (
@@ -102,6 +171,10 @@ export const interactionCreate: EventHandlers["interactionCreate"] = async (
 
     if (interaction.data?.options?.at(0)?.name === "backup") {
       await interactionBackup(bot, interaction);
+    }
+
+    if (interaction.data?.options?.at(0)?.name === "bot") {
+      await interactionBot(bot, interaction);
     }
   } catch (err) {
     console.error(err);

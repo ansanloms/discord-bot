@@ -1,10 +1,6 @@
 import "std/dotenv/load.ts";
 
-import {
-  createBot,
-  Intents,
-  startBot,
-} from "discordeno/mod.ts";
+import { createBot, Intents, startBot } from "discordeno/mod.ts";
 
 import * as minecraft from "./bot/minecraft/mod.ts";
 

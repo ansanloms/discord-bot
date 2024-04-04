@@ -37,7 +37,7 @@ export const execScript = async (scriptName: string) => {
           "--project-directory",
           Deno.env.get("MINECRAFT_SERVER_PROJECT_DIRECTORY")!,
           "exec",
-          "minecraft-vanilla",
+          Deno.env.get("MINECRAFT_SERVER_CONTAINER_NAME")!,
           "bash",
           `./scripts/${scriptName}.sh`,
         ].join(" "),
@@ -46,4 +46,70 @@ export const execScript = async (scriptName: string) => {
   );
 
   return await c.output();
+};
+
+export const startBot = async () => {
+  const c = new Deno.Command(
+    "ssh",
+    {
+      args: [
+        `${Deno.env.get("MINECRAFT_SERVER_USER")!}@${Deno.env.get(
+          "MINECRAFT_SERVER_HOST",
+        )!}`,
+        [
+          "docker",
+          "compose",
+          "--project-directory",
+          Deno.env.get("MINECRAFT_SERVER_PROJECT_DIRECTORY")!,
+          "--profile",
+          "client",
+          "up",
+          "-d",
+        ].join(" "),
+      ],
+    },
+  );
+
+  const { code, stdout, stderr } = await c.output();
+
+  console.log(
+    code,
+    new TextDecoder().decode(stdout),
+    new TextDecoder().decode(stderr),
+  );
+  return code === 0;
+};
+
+export const stopBot = async () => {
+  const c = new Deno.Command(
+    "ssh",
+    {
+      args: [
+        `${Deno.env.get("MINECRAFT_SERVER_USER")!}@${Deno.env.get(
+          "MINECRAFT_SERVER_HOST",
+        )!}`,
+        [
+          "docker",
+          "compose",
+          "--project-directory",
+          Deno.env.get("MINECRAFT_SERVER_PROJECT_DIRECTORY")!,
+          "--profile",
+          "client",
+          "stop",
+        ].join(" "),
+      ],
+    },
+  );
+
+  const { code, stdout, stderr } = await c.output();
+
+  console.log(
+    {
+      code,
+      stdout: new TextDecoder().decode(stdout),
+      stderr: new TextDecoder().decode(stderr),
+    },
+  );
+
+  return code === 0;
 };
