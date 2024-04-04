@@ -70,13 +70,8 @@ export const startBot = async () => {
     },
   );
 
-  const { code, stdout, stderr } = await c.output();
+  const { code } = await c.output();
 
-  console.log(
-    code,
-    new TextDecoder().decode(stdout),
-    new TextDecoder().decode(stderr),
-  );
   return code === 0;
 };
 
@@ -101,15 +96,7 @@ export const stopBot = async () => {
     },
   );
 
-  const { code, stdout, stderr } = await c.output();
-
-  console.log(
-    {
-      code,
-      stdout: new TextDecoder().decode(stdout),
-      stderr: new TextDecoder().decode(stderr),
-    },
-  );
+  const { code } = await c.output();
 
   return code === 0;
 };
