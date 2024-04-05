@@ -107,9 +107,27 @@ const interactionBackup: EventHandlers["interactionCreate"] = async (
       },
     ),
     (async () => {
-      await server.sendCommand(["say backup.", "save-all"]);
-      await server.execScript("backup");
-      await server.sendCommand(["say backup completed."]);
+      await server.sendCommand(["say backup...", "save-all"]);
+
+      const { stdout } = await server.execScript("backup");
+      const filename = new TextDecoder().decode(stdout).trim();
+
+      await server.sendCommand([`say backup completed: ${filename}`]);
+
+      const url = new URL(
+        `${Deno.env.get("MINECRAFT_SERVER_BASE_URL")}/backup/${
+          Deno.env.get("MINECRAFT_SERVER_CONTAINER_NAME")!.slice(
+            "minecraft-".length,
+          )
+        }/${encodeURIComponent(filename)}`,
+      );
+
+      await bot.helpers.sendMessage(
+        Deno.env.get("DISCORD_CHANNEL_ID_MINECRAFT")!,
+        {
+          content: `backup completed: ${url.toString()}`,
+        },
+      );
     })(),
   ]);
 };
